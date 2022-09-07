@@ -206,42 +206,23 @@ jobs:
       # - destroy-environment:
       #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}       
 
-  run-migrations:
-    docker:
-      # Docker image here that supports NodeJS
-      - image: circleci/node:13.8.0
-    steps:
-      # Checkout code from git
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
-      
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       apk add --update --no-cache nodejs npm aws-cli
-
-      - run:
+  - run:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            #npm audit fix --force --audit-level=critical
-            #npm audit fix --force --audit-level=critical
-            #npm audit --audit-level=critical
+            sudo npm install -g npm
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-            
       - run:
           name: Send migration results to kvdb.io
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl --insecure https://kvdb.io/4VJ274WBBHEq9RdkvDHSaq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+                curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
      # Here's where you will add some code to rollback on failure
       # - destroy-environment:
-      #       workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
+      #       workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
 
 #   deploy-frontend:
 #     docker:
