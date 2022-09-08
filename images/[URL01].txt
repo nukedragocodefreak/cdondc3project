@@ -1,0 +1,3 @@
+Github: https://github.com/nukedragocodefreak/cdondc3project
+Frontend: http://udapeople-a44d705.s3-website-us-east-1.amazonaws.com/#/employees
+	: http://d39rziiiaczgl7.cloudfront.net/
